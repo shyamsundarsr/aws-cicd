@@ -22,3 +22,8 @@ output "name_servers" {
   description = "The name servers for the Route 53 hosted zone"
   value       = aws_route53_zone.tf-route53-zone.name_servers
 }
+
+output "github_actions_role_arn" {
+  value       = aws_iam_role.github_oidc_role.arn
+  description = "The actual IAM Role ARN for GitHub Actions to assume"
+}
