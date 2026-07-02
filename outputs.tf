@@ -27,3 +27,8 @@ output "github_actions_role_arn" {
   value       = aws_iam_role.github_oidc_role.arn
   description = "The actual IAM Role ARN for GitHub Actions to assume"
 }
+
+output "ecs_execution_role_arn" {
+  value = aws_iam_role.ecs_task_execution_role.arn
+  description = "The ARN of the ECS task execution role"
+}
