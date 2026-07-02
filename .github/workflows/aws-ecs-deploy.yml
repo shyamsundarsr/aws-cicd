@@ -1,0 +1,39 @@
+
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+            aws-region: ${{ vars.AWS_REGION }}
+            role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+            role-session-name: ${{ vars.AWS_REGION }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: render-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: nginx
+          image: nginx:latest
+
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+            task-definition: ${{ steps.render-task-def.outputs.task-definition }}
+            service: ${{ vars.AWS_ECS_SERVICE }}
+            cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
+
