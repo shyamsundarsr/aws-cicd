@@ -3,7 +3,7 @@ name: Github actions - AWS CICD
 on:
   push:
     branches: [main]
-    
+
 permissions:
   id-token: write
   contents: read
@@ -11,5 +11,7 @@ permissions:
 jobs:
   terraform:
     uses: ./.github/workflows/terraform.yml
+
   deploy:
+    needs: terraform
     uses: ./.github/workflows/aws-ecs-deploy.yml
