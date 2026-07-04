@@ -29,8 +29,6 @@ jobs:
             role-session-name: github-actions-tf-infra
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: 1.7.6
 
       - name: Terraform Format Check
         run: terraform fmt -check
