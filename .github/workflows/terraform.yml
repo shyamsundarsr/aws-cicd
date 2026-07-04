@@ -6,6 +6,8 @@ on:
     paths:
       - '**.tf'
       - '**.tfvars'
+  workflow_dispatch:
+
 permissions:
   id-token: write
   contents: read
