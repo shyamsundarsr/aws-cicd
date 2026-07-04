@@ -278,7 +278,6 @@ resource "aws_ecs_service" "tf-ecs-service" {
   depends_on = [aws_lb_listener.tf-alb-listener-http]
 }
 
-
 #AWS Route 53 Hosted Zone for ALB
 resource "aws_route53_zone" "tf-route53-zone" {
   name = var.domain_name
