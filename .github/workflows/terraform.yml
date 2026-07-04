@@ -1,6 +1,7 @@
 name: Terraform Infrastructure CICD
 
 on:
+  workflow_call:
   push:
     branches: [main]
     paths:

@@ -1,0 +1,10 @@
+name: Github actions - AWS CICD
+
+on:
+  push:
+    branches: [main]
+jobs:
+  terraform:
+    uses: ./.github/workflows/terraform.yml
+  deploy:
+    uses: ./.github/workflows/aws-ecs-deploy.yml
