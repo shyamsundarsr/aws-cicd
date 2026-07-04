@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "github_assume_role" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:shyamsundarsr/aws-cicd:*"]
+      values   = ["repo:shyamsundarsr/aws-cicd:ref:refs/heads/main"]
     }
   }
 }
@@ -62,4 +62,37 @@ resource "aws_iam_policy" "github_actions_ecs_policy" {
 resource "aws_iam_role_policy_attachment" "github_actions_attach" {
   role       = aws_iam_role.github_oidc_role.name
   policy_arn = aws_iam_policy.github_actions_ecs_policy.arn
+}
+
+
+data "aws_iam_policy_document" "github_terraform_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github.arn]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:shyamsundarsr/aws-cicd:ref:refs/heads/main"]
+    }
+  }
+}
+
+resource "aws_iam_role" "github_terraform_role" {
+  name               = "github_terraform_role"
+  assume_role_policy = data.aws_iam_policy_document.github_terraform_assume_role.json
+  tags               = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "github_terraform_admin_attach" {
+  role       = aws_iam_role.github_terraform_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }

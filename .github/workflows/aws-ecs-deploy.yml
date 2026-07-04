@@ -19,12 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
             aws-region: ${{ vars.AWS_REGION }}
-            role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
-            role-session-name: ${{ vars.AWS_REGION }}
+            role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+            role-session-name: github-actions-app-ecs-deploy
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: render-task-def
