@@ -2,11 +2,11 @@ name: Terraform Infrastructure CICD
 
 on:
   workflow_call:
-  push:
-    branches: [main]
-    paths:
-      - '**.tf'
-      - '**.tfvars'
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - '**.tf'
+  #     - '**.tfvars'
   workflow_dispatch:
 
 permissions:
