@@ -186,7 +186,7 @@ resource "aws_lb_target_group" "tf-alb-backend-tg" {
     interval          = 30
     timeout           = 5
     healthy_threshold = 3
-    matcher           = "200"
+    matcher           = "200-499"
   }
 
   tags = merge(var.tags, { Name = "tf-alb-tg" })
@@ -366,6 +366,7 @@ resource "aws_ecs_service" "tf-ecs-petclinic-frontend" {
   cluster         = aws_ecs_cluster.tf-ecs-cluster.id
   task_definition = aws_ecs_task_definition.frontend_placeholder.arn
   desired_count   = 1
+  health_check_grace_period_seconds = 120
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -394,6 +395,7 @@ resource "aws_ecs_service" "tf-ecs-petclinic-backend" {
   cluster         = aws_ecs_cluster.tf-ecs-cluster.id
   task_definition = aws_ecs_task_definition.backend_placeholder.arn
   desired_count   = 1
+  health_check_grace_period_seconds = 120
   launch_type     = "FARGATE"
 
   network_configuration {
