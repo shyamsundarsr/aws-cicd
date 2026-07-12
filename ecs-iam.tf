@@ -29,7 +29,10 @@ data "aws_iam_policy_document" "ecs_secrets_access_policy" {
   statement {
     effect    = "Allow"
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = [aws_secretsmanager_secret_version.rds_secret_version.secret_arn]
+    resources = [
+      aws_secretsmanager_secret_version.rds_secret_version.secret_arn,
+      aws_secretsmanager_secret_version.petclinic_backend_env_version.secret_arn
+    ]
   }
 }
 
