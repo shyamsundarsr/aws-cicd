@@ -27,8 +27,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 # Permissions policy (Allows ECS to inject secrets into the container)
 data "aws_iam_policy_document" "ecs_secrets_access_policy" {
   statement {
-    effect    = "Allow"
-    actions   = ["secretsmanager:GetSecretValue"]
+    effect  = "Allow"
+    actions = ["secretsmanager:GetSecretValue"]
     resources = [
       aws_secretsmanager_secret_version.rds_secret_version.secret_arn,
       aws_secretsmanager_secret_version.petclinic_backend_env_version.secret_arn
