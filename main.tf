@@ -362,12 +362,12 @@ resource "aws_ecs_task_definition" "frontend_placeholder" {
 
 #AWS ECS Service
 resource "aws_ecs_service" "tf-ecs-petclinic-frontend" {
-  name            = "tf-ecs-petclinic-frontend"
-  cluster         = aws_ecs_cluster.tf-ecs-cluster.id
-  task_definition = aws_ecs_task_definition.frontend_placeholder.arn
-  desired_count   = 1
+  name                              = "tf-ecs-petclinic-frontend"
+  cluster                           = aws_ecs_cluster.tf-ecs-cluster.id
+  task_definition                   = aws_ecs_task_definition.frontend_placeholder.arn
+  desired_count                     = 1
   health_check_grace_period_seconds = 120
-  launch_type     = "FARGATE"
+  launch_type                       = "FARGATE"
 
   network_configuration {
     subnets          = [for subnet in aws_subnet.public_subnet : subnet.id]
@@ -391,12 +391,12 @@ resource "aws_ecs_service" "tf-ecs-petclinic-frontend" {
 
 #AWS ECS Service
 resource "aws_ecs_service" "tf-ecs-petclinic-backend" {
-  name            = "tf-ecs-petclinic-backend"
-  cluster         = aws_ecs_cluster.tf-ecs-cluster.id
-  task_definition = aws_ecs_task_definition.backend_placeholder.arn
-  desired_count   = 1
+  name                              = "tf-ecs-petclinic-backend"
+  cluster                           = aws_ecs_cluster.tf-ecs-cluster.id
+  task_definition                   = aws_ecs_task_definition.backend_placeholder.arn
+  desired_count                     = 1
   health_check_grace_period_seconds = 120
-  launch_type     = "FARGATE"
+  launch_type                       = "FARGATE"
 
   network_configuration {
     subnets          = [for subnet in aws_subnet.private_backend_subnet : subnet.id]
