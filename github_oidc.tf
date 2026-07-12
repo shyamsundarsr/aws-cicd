@@ -18,12 +18,12 @@ data "aws_iam_policy_document" "github_assume_role" {
     }
     condition {
       test     = "StringEquals"
-      variable = "token.actions.githubusercontent.com:aud"
+      variable = "token.actions.githubusercontent.com:aud" #Audience
       values   = ["sts.amazonaws.com"]
     }
     condition {
       test     = "StringLike"
-      variable = "token.actions.githubusercontent.com:sub"
+      variable = "token.actions.githubusercontent.com:sub" #Subject
       values   = ["repo:shyamsundarsr/aws-cicd:ref:refs/heads/main"]
     }
   }

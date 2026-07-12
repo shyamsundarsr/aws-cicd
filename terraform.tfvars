@@ -12,7 +12,7 @@ public_subnet = {
   }
 }
 
-private_subnet = {
+private_backend_subnet = {
   az_1 = {
     cidr_block        = "10.0.10.0/24"
     availability_zone = "us-east-1a"
@@ -20,6 +20,18 @@ private_subnet = {
 
   az_2 = {
     cidr_block        = "10.0.20.0/24"
+    availability_zone = "us-east-1b"
+  }
+}
+
+private_db_subnet = {
+  az_1 = {
+    cidr_block        = "10.0.30.0/24"
+    availability_zone = "us-east-1a"
+  }
+
+  az_2 = {
+    cidr_block        = "10.0.40.0/24"
     availability_zone = "us-east-1b"
   }
 }
@@ -32,3 +44,6 @@ tags = {
 }
 
 domain_name = "shyamdevops.online"
+
+db_name     = "postgres"
+db_username = "petclinic"

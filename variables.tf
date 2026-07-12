@@ -16,8 +16,16 @@ variable "public_subnet" {
   }))
 }
 
-variable "private_subnet" {
-  description = "The CIDR block for the private subnet"
+variable "private_backend_subnet" {
+  description = "The CIDR block for the private backend subnet"
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+  }))
+}
+
+variable "private_db_subnet" {
+  description = "The CIDR block for the private database subnet"
   type = map(object({
     cidr_block        = string
     availability_zone = string
@@ -34,3 +42,12 @@ variable "tags" {
   type        = map(string)
 }
 
+variable "db_name" {
+  description = "The name of the RDS PostgreSQL database"
+  type        = string
+}
+
+variable "db_username" {
+  description = "The username for the RDS PostgreSQL database"
+  type        = string
+}

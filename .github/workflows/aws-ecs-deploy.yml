@@ -21,22 +21,37 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
-            aws-region: ${{ vars.AWS_REGION }}
-            role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
-            role-session-name: github-actions-app-ecs-deploy
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: github-actions-app-ecs-deploy
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: render-task-def
+      - name: Render frontend task definition
+        id: render-frontend-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: .aws/task-definition.json
-          container-name: nginx
-          image: nginx:latest
+          task-definition: .aws/pet-clinic-frontend.json
+          container-name: petclinic-frontend
+          image: ${{ vars.ECR_FRONTEND_REPOSITORY }}:${{ github.sha }}
 
-      - name: Deploy to Amazon ECS service
+      - name: Deploy frontend service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
-            task-definition: ${{ steps.render-task-def.outputs.task-definition }}
-            service: ${{ vars.AWS_ECS_SERVICE }}
-            cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
+          task-definition: ${{ steps.render-frontend-task-def.outputs.task-definition }}
+          service: tf-ecs-petclinic-frontend
+          cluster: tf-ecs-cluster
+
+      - name: Render backend task definition
+        id: render-backend-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/pet-clinic-backend.json
+          container-name: petclinic-backend
+          image: ${{ vars.ECR_BACKEND_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy backend service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-backend-task-def.outputs.task-definition }}
+          service: tf-ecs-petclinic-backend
+          cluster: tf-ecs-cluster
 

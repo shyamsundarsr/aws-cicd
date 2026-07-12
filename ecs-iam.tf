@@ -24,3 +24,24 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Permissions policy (Allows ECS to inject secrets into the container)
+data "aws_iam_policy_document" "ecs_secrets_access_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = [aws_secretsmanager_secret_version.rds_secret_version.secret_arn]
+  }
+}
+
+# IAM policy for ECS tasks to access RDS secrets
+resource "aws_iam_policy" "ecs_secrets_policy" {
+  name        = "ecs_secrets_policy"
+  description = "Policy for ECS tasks to access RDS secrets"
+  policy      = data.aws_iam_policy_document.ecs_secrets_access_policy.json
+}
+
+# Attach the secrets access policy to the ECS task execution role
+resource "aws_iam_role_policy_attachment" "ecs_secrets_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.ecs_secrets_policy.arn
+}

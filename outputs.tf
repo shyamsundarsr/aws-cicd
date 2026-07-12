@@ -8,9 +8,14 @@ output "ecs_cluster_name" {
   value       = aws_ecs_cluster.tf-ecs-cluster.name
 }
 
-output "ecs_service_name" {
+output "ecs_service_frontend_name" {
   description = "The name of the ECS service"
-  value       = aws_ecs_service.tf-ecs-service.name
+  value       = aws_ecs_service.tf-ecs-petclinic-frontend.name
+}
+
+output "ecs_service_backend_name" {
+  description = "The name of the ECS service"
+  value       = aws_ecs_service.tf-ecs-petclinic-backend.name
 }
 
 output "github_oidc_provider_arn" {
