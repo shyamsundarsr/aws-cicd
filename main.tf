@@ -324,17 +324,19 @@ resource "aws_ecs_task_definition" "backend_placeholder" {
         }
       ]
       environment = [
-        { name = "SPRING_PROFILES_ACTIVE", value = "postgres,spring-data-jpa" },
-        { name = "POSTGRES_URL", value = "jdbc:postgresql://${aws_db_instance.rds_postgres.endpoint}/${var.db_name}" },
-        { name = "POSTGRES_USER", value = var.db_username },
-        { name = "POSTGRES_PASS", value = random_password.rds_password.result }
+        { name = "SPRING_PROFILES_ACTIVE", value = "postgres,spring-data-jpa" }
+      ]
+      secrets = [
+        { name = "POSTGRES_URL", valueFrom = "${aws_secretsmanager_secret.petclinic_backend_env.arn}:POSTGRES_URL::" },
+        { name = "POSTGRES_USER", valueFrom = "${aws_secretsmanager_secret.petclinic_backend_env.arn}:POSTGRES_USER::" },
+        { name = "POSTGRES_PASS", valueFrom = "${aws_secretsmanager_secret.petclinic_backend_env.arn}:POSTGRES_PASS::" }
       ]
     }
   ])
 }
 # Temporary placeholder task definition so the initial service can build
 resource "aws_ecs_task_definition" "frontend_placeholder" {
-  family                   = "petclinic-frontend-task"
+  family                   = "petclinic-frontend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -379,7 +381,7 @@ resource "aws_ecs_service" "tf-ecs-petclinic-frontend" {
   }
   lifecycle {
     ignore_changes = [
-      # task_definition,
+      task_definition,
       desired_count
     ]
   }
@@ -407,7 +409,7 @@ resource "aws_ecs_service" "tf-ecs-petclinic-backend" {
   }
   lifecycle {
     ignore_changes = [
-      # task_definition,
+      task_definition,
       desired_count
     ]
   }
@@ -506,6 +508,21 @@ resource "aws_secretsmanager_secret_version" "rds_secret_version" {
   secret_string = jsonencode({
     username = var.db_username
     password = random_password.rds_password.result
+  })
+}
+
+resource "aws_secretsmanager_secret" "petclinic_backend_env" {
+  name        = "petclinic/backend-env"
+  description = "Runtime environment variables for the Spring Boot backend"
+  tags        = merge(var.tags, { Name = "petclinic-backend-env-secret" })
+}
+
+resource "aws_secretsmanager_secret_version" "petclinic_backend_env_version" {
+  secret_id = aws_secretsmanager_secret.petclinic_backend_env.id
+  secret_string = jsonencode({
+    POSTGRES_URL = "jdbc:postgresql://${aws_db_instance.rds_postgres.endpoint}/${var.db_name}"
+    POSTGRES_USER = var.db_username
+    POSTGRES_PASS = random_password.rds_password.result
   })
 }
 
