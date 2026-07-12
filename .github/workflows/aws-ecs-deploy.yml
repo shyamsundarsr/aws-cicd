@@ -31,7 +31,7 @@ jobs:
         with:
           task-definition: .aws/pet-clinic-frontend.json
           container-name: petclinic-frontend
-          image: ${{ vars.ECR_FRONTEND_REPOSITORY }}:${{ github.sha }}
+          image: 261371110333.dkr.ecr.us-east-1.amazonaws.com/petclinic-frontend:latest
 
       - name: Deploy frontend service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -46,7 +46,7 @@ jobs:
         with:
           task-definition: .aws/pet-clinic-backend.json
           container-name: petclinic-backend
-          image: ${{ vars.ECR_BACKEND_REPOSITORY }}:${{ github.sha }}
+          image: 261371110333.dkr.ecr.us-east-1.amazonaws.com/petclinic-backend:latest
 
       - name: Deploy backend service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
