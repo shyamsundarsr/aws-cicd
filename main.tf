@@ -520,7 +520,7 @@ resource "aws_secretsmanager_secret" "petclinic_backend_env" {
 resource "aws_secretsmanager_secret_version" "petclinic_backend_env_version" {
   secret_id = aws_secretsmanager_secret.petclinic_backend_env.id
   secret_string = jsonencode({
-    POSTGRES_URL = "jdbc:postgresql://${aws_db_instance.rds_postgres.endpoint}/${var.db_name}"
+    POSTGRES_URL  = "jdbc:postgresql://${aws_db_instance.rds_postgres.endpoint}/${var.db_name}"
     POSTGRES_USER = var.db_username
     POSTGRES_PASS = random_password.rds_password.result
   })
